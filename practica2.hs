@@ -6,6 +6,19 @@ data LProp = PTrue | PFalse | Var Nombre | Neg LProp | Conj LProp LProp | Disy L
 
 type Nombre = String
 
+type Asignacion = [(String, Bool)]
+
+instance Show LProp where
+    show PTrue = "True"
+    show PFalse = "False"
+    show (Var p) = p
+    show (Neg p) = "¬"++ show p 
+    show (Conj p q) = show p ++ "^" ++ show q
+    show (Disy p q) = show p ++ "v" ++ show q
+    show (Impl p q) = show p ++ "->" ++ show q
+    show (Syss p q) = show p ++ "<->" ++ show q
+
+
 --1. vars: Toma como argumento una fÓrmula y regresa las variables en la formula.
 
 elimina_duplicado :: Eq a => [a] -> [a]
