@@ -39,8 +39,23 @@ deMorgan (Syss a b) = Syss (deMorgan a) (deMorgan b)
 
 --3. equiv op: Dada una formula con implicacion → regresa su equivalente con conectores basicos. Por ejemplo, para p → q regresara el valor ¬p ∨ q.
 --4.dobleNeg: Dada una formula con doble negacion elimina esta. Por ejemplo, para ¬(¬p) regresar p.
---5. num conectivos: Funcion recursiva para contar el n´umero de conectivos logicos de una formula
---6. num variables: Funcion recursiva para contar el n´umero de variables de una formula.
+--5. num conectivos: Función recursiva para contar el número de conectivos logicos de una fórmula
+cuentaConect :: String -> Int
+cuentaConect "" = 0  -- Caso base: si la cadena está vacía, retorna 0
+cuentaConect (x:xs)
+    | x `elem` conectivos = 1 + cuentaConect xs  -- Si es un conectivo, cuenta y continúa
+    | otherwise           = cuentaConect xs      -- Si no es un conectivo, solo continúa
+  where
+    conectivos = "¬∧∨→↔"  -- Lista de conectivos lógicos
+
+--6. num variables: Función recursiva para contar el número de variables de una fórmula.
+cuentaVars :: String -> Int
+cuentaVars "" = 0  -- Caso base: si la cadena está vacía, retorna 0
+cuentaVars (x:xs)
+    | x `elem` variables = 1 + cuentaVars xs  -- Si es una variable, cuenta y continúa
+    | otherwise          = cuentaVars xs      -- Si no es una variable, solo continúa
+  where
+    variables = ['a'..'z'] ++ ['A'..'Z'] -- Lista de variables
 --7. profundidad: Funcion recursiva que regresa la profundidad de una f´ormula l´ogica.
 --8.interpretacion: Regresa los valores de verdad, True o False, segun una asig-naci´on. Toma como argumentos una f´ormula y una asignaci´on de las variables.
 --Por ejemplo: interpretacion (p∧q) [(”p”, True), (”q”, False)] regresar´a True.
