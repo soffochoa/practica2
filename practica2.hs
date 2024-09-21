@@ -8,15 +8,20 @@ type Nombre = String
 
 --1. vars: Toma como argumento una fÓrmula y regresa las variables en la formula.
 
+elimina_duplicado :: Eq a => [a] -> [a]
+elimina_duplicado [] = []
+elimina_duplicado (x:xs)    | elem x xs = elimina_duplicado xs
+                            | otherwise = x : elimina_duplicado xs
+
 vars :: LProp -> [Nombre]
 vars PTrue = []
 vars PFalse = []
 vars (Var n) = [n]
-vars (Neg p) = vars p
-vars (Conj p q) = vars p ++ vars q
-vars (Disy p q) = vars p ++ vars q
-vars (Impl p q) = vars p ++ vars q
-vars (Syss p q) = vars p ++ vars q
+vars (Neg n) = vars n
+vars (Conj p q) = elimina_duplicado(vars (p) ++ vars (q)) 
+vars (Disy p q) = elimina_duplicado(vars (p) ++ vars (q)) 
+vars (Impl p q) = elimina_duplicado(vars (p) ++ vars (q))
+vars (Syss p q) = elimina_duplicado(vars (p) ++ vars (q))
 
 --2. deMorgan: Toma una f´ormula proposicional y regresa su valor aplicando las leyes de De Morgan. Por ejemplo: deMorgan ¬(p ∧ q) regresa (¬p ∨ ¬q).
 --Si nose aplica la ley, regresa la f´ormula original. 
