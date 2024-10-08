@@ -51,6 +51,9 @@ deMorgan (Impl a b) = Impl (deMorgan a) (deMorgan b)
 deMorgan (Syss a b) = Syss (deMorgan a) (deMorgan b)
 
 --3. equiv op: Dada una formula con implicacion → regresa su equivalente con conectores basicos. Por ejemplo, para p → q regresara el valor ¬p ∨ q.
+equiv_op :: LProp -> LProp
+equiv_op (Impl p q) = (Disy (Neg (equiv_op p)) (equiv_op q))
+equiv_op p = p
 --4.dobleNeg: Dada una formula con doble negacion elimina esta. Por ejemplo, para ¬(¬p) regresar p.
 --5. num conectivos: Función recursiva para contar el número de conectivos logicos de una fórmula
 cuentaConect :: String -> Int
