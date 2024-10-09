@@ -55,23 +55,27 @@ equiv_op :: LProp -> LProp
 equiv_op (Impl p q) = (Disy (Neg (equiv_op p)) (equiv_op q))
 equiv_op p = p
 --4.dobleNeg: Dada una formula con doble negacion elimina esta. Por ejemplo, para ¬(¬p) regresar p.
---5. num conectivos: Función recursiva para contar el número de conectivos logicos de una fórmula
-cuentaConect :: String -> Int
-cuentaConect "" = 0  -- Caso base: si la cadena está vacía, retorna 0
-cuentaConect (x:xs)
-    | x `elem` conectivos = 1 + cuentaConect xs  -- Si es un conectivo, cuenta y continúa
-    | otherwise           = cuentaConect xs      -- Si no es un conectivo, solo continúa
-  where
-    conectivos = "¬∧∨→↔"  -- Lista de conectivos lógicos
+--5. numConectivos: Funcion recursiva para contar el número de conectivos lógicos de una formula.
+numConectivos :: LProp -> Int
+numConectivos PTrue = 0
+numConectivos PFalse = 0
+numConectivos (Var _) = 0
+numConectivos (Neg p) = 1 + numConectivos p
+numConectivos (Conj p q) = 1 + numConectivos p + numConectivos q
+numConectivos (Disy p q) = 1 + numConectivos p + numConectivos q
+numConectivos (Impl p q) = 1 + numConectivos p + numConectivos q
+numConectivos (Syss p q) = 1 + numConectivos p + numConectivos q
 
---6. num variables: Función recursiva para contar el número de variables de una fórmula.
-cuentaVars :: String -> Int
-cuentaVars "" = 0  -- Caso base: si la cadena está vacía, retorna 0
-cuentaVars (x:xs)
-    | x `elem` variables = 1 + cuentaVars xs  -- Si es una variable, cuenta y continúa
-    | otherwise          = cuentaVars xs      -- Si no es una variable, solo continúa
-  where
-    variables = ['a'..'z'] ++ ['A'..'Z'] -- Lista de variables
+--6. numVariables: Funcion recursiva para contar el número de variables de una formula.
+numVariables :: LProp -> Int
+numVariables PTrue = 0
+numVariables PFalse = 0
+numVariables (Var _) = 1
+numVariables (Neg p) = numVariables p
+numVariables (Conj p q) = numVariables p + numVariables q
+numVariables (Disy p q) = numVariables p + numVariables q
+numVariables (Impl p q) = numVariables p + numVariables q
+numVariables (Syss p q) = numVariables p + numVariables q
 --7. profundidad: Funcion recursiva que regresa la profundidad de una f´ormula l´ogica.
 --8.interpretacion: Regresa los valores de verdad, True o False, segun una asig-naci´on. Toma como argumentos una f´ormula y una asignaci´on de las variables.
 --Por ejemplo: interpretacion (p∧q) [(”p”, True), (”q”, False)] regresar´a True.
