@@ -75,15 +75,14 @@ cuentaVars (x:xs)
 --7. profundidad: Funcion recursiva que regresa la profundidad de una f´ormula l´ogica.
 --8.interpretacion: Regresa los valores de verdad, True o False, segun una asig-naci´on. Toma como argumentos una f´ormula y una asignaci´on de las variables.
 --Por ejemplo: interpretacion (p∧q) [(”p”, True), (”q”, False)] regresar´a True.
-auxiliar :: String -> [Asignacion] -> Bool
-auxiliar _ [] = error "error"
-auxiliar n ((x,val):xs) = if n == x then val
-                          else auxiliar n xs 
+
 
 interpretacion :: LProp -> [Asignacion] -> Bool
-interpretacion PTrue (x:xs) = True
-interpretacion PFalse (x:xs) = False
-interpretacion (Var p) (x:xs) = auxiliar p (x:xs)
+interpretacion PTrue _ = True
+interpretacion PFalse _ = False
+interpretacion (Var _) [] = error "error"
+interpretacion (Var p) ((x,val):xs) = if p == x then val
+                                     else interpretacion (Var p) xs 
 interpretacion (Neg p) (x:xs) = interpretacion p (x:xs) == False
 interpretacion (Conj p q) (x:xs) = interpretacion p (x:xs) == True && interpretacion q (x:xs) == True
 interpretacion (Disy p q) (x:xs) = interpretacion p (x:xs) == True || interpretacion q (x:xs) == True
