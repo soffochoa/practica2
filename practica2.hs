@@ -43,10 +43,10 @@ deMorgan PTrue = PTrue
 deMorgan PFalse = PFalse
 deMorgan (Var n) = (Var n)
 deMorgan (Neg n) = Neg (deMorgan n)
---deMorgan (Conj a b) = Conj (deMorgan a) (deMorgan b)
-deMorgan (Neg (Conj a b)) = Disy (Neg (deMorgan a)) (Neg (deMorgan b))
---deMorgan (Disy a b) = Disy (deMorgan a) (deMorgan b)
-deMorgan (Neg (Disy a b)) = Conj (Neg (deMorgan a)) (Neg (deMorgan b))
+deMorgan (Neg (Disy a b)) = (Conj (Neg (deMorgan (a))) (Neg (deMorgan (b))))
+deMorgan (Neg (Conj a b)) = (Disy (Neg (deMorgan (a))) (Neg (deMorgan (b))))
+deMorgan (Conj (Neg (a)) (Neg (b))) = (Neg (Disy (deMorgan(a)) (deMorgan(b))))
+deMorgan (Disy (Neg (a)) (Neg (b))) = (Neg (Conj (deMorgan(a)) (deMorgan(b))))
 deMorgan (Impl a b) = Impl (deMorgan a) (deMorgan b)
 deMorgan (Syss a b) = Syss (deMorgan a) (deMorgan b)
 
@@ -81,8 +81,7 @@ interpretacion :: LProp -> [Asignacion] -> Bool
 interpretacion PTrue _ = True
 interpretacion PFalse _ = False
 interpretacion (Var _) [] = error "error"
-interpretacion (Var p) ((x,val):xs) = if p == x then val
-                                     else interpretacion (Var p) xs 
+interpretacion (Var p) ((x,val):xs) = if p == x then val else interpretacion (Var p) xs 
 interpretacion (Neg p) (x:xs) = interpretacion p (x:xs) == False
 interpretacion (Conj p q) (x:xs) = interpretacion p (x:xs) == True && interpretacion q (x:xs) == True
 interpretacion (Disy p q) (x:xs) = interpretacion p (x:xs) == True || interpretacion q (x:xs) == True
