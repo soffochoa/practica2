@@ -54,7 +54,11 @@ deMorgan (Syss a b) = Syss (deMorgan a) (deMorgan b)
 equiv_op :: LProp -> LProp
 equiv_op (Impl p q) = (Disy (Neg (equiv_op p)) (equiv_op q))
 equiv_op p = p
+
 --4.dobleNeg: Dada una formula con doble negacion elimina esta. Por ejemplo, para ¬(¬p) regresar p.
+dobleNeg :: LProp -> LProp
+dobleNeg (Neg(Neg p)) = p
+
 --5. numConectivos: Funcion recursiva para contar el número de conectivos lógicos de una formula.
 numConectivos :: LProp -> Int
 numConectivos PTrue = 0
@@ -76,7 +80,18 @@ numVariables (Conj p q) = numVariables p + numVariables q
 numVariables (Disy p q) = numVariables p + numVariables q
 numVariables (Impl p q) = numVariables p + numVariables q
 numVariables (Syss p q) = numVariables p + numVariables q
+
 --7. profundidad: Funcion recursiva que regresa la profundidad de una f´ormula l´ogica.
+profundidad :: LProp -> Integer
+profundidad (PTrue) = 0
+profundidad (PFalse) = 0
+profundidad (Var p) = 0
+profundidad (Neg p) = 1 + profundidad(p)
+profundidad (Conj q p) = 1 + max(profundidad q)(profundidad p)
+profundidad (Disy q p) = 1 + max(profundidad q)(profundidad p)
+profundidad (Impl q p) = 1 + max(profundidad q)(profundidad p)
+profundidad (Syss q p) = 1 + max(profundidad q)(profundidad p)
+
 --8.interpretacion: Regresa los valores de verdad, True o False, segun una asig-naci´on. Toma como argumentos una f´ormula y una asignaci´on de las variables.
 --Por ejemplo: interpretacion (p∧q) [(”p”, True), (”q”, False)] regresar´a True.
 
