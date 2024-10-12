@@ -12,7 +12,7 @@ instance Show LProp where
     show PTrue = "True"
     show PFalse = "False"
     show (Var p) = p
-    show (Neg p) = "¬"++ show p 
+    show (Neg p) = "¬("++ show p ++ ")" 
     show (Conj p q) = show p ++ "^" ++ show q
     show (Disy p q) = show p ++ "v" ++ show q
     show (Impl p q) = show p ++ "->" ++ show q
@@ -86,7 +86,7 @@ interpretacion PTrue _ = True
 interpretacion PFalse _ = False
 interpretacion (Var _) [] = error "error"
 interpretacion (Var p) ((x,val):xs) = if p == x then val else interpretacion (Var p) xs 
-interpretacion (Neg p) (x:xs) = interpretacion p (x:xs) == False
+interpretacion (Neg p) (x:xs) = not (interpretacion p (x:xs))
 interpretacion (Conj p q) (x:xs) = interpretacion p (x:xs) == True && interpretacion q (x:xs) == True
 interpretacion (Disy p q) (x:xs) = interpretacion p (x:xs) == True || interpretacion q (x:xs) == True
 interpretacion (Impl p q) (x:xs) = interpretacion (Neg p) (x:xs) == True || interpretacion q (x:xs) == True
